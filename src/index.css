@@ -5,33 +5,33 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
+    --background: 220 20% 5%;
     --foreground: 0 0% 98%;
     
-    --card: 240 10% 3.9%;
+    --card: 220 20% 5%;
     --card-foreground: 0 0% 98%;
     
-    --popover: 240 10% 3.9%;
+    --popover: 220 20% 5%;
     --popover-foreground: 0 0% 98%;
     
     --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary-foreground: 220 10% 10%;
     
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 220 10% 15%;
     --secondary-foreground: 0 0% 98%;
     
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 220 10% 15%;
+    --muted-foreground: 220 10% 70%;
     
-    --accent: 240 3.7% 15.9%;
+    --accent: 220 10% 15%;
     --accent-foreground: 0 0% 98%;
     
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 220 10% 15%;
+    --input: 220 10% 15%;
+    --ring: 220 10% 80%;
     
     --radius: 0.5rem;
   }
@@ -57,6 +57,6 @@
   }
   
   .accent-gradient {
-    @apply bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-500 bg-clip-text text-transparent;
   }
 }
