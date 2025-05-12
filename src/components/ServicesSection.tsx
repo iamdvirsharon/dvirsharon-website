@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Search, Database, Zap, Code, Flask } from "lucide-react";
+import { TrendingUp, Search, Database, Zap, Code, Beaker } from "lucide-react";
 
 const ServicesSection = () => {
   const services = [
@@ -28,7 +28,7 @@ const ServicesSection = () => {
     {
       title: "Experimentation Methods",
       description: "Implement proven experimentation frameworks to continuously optimize your conversion rates.",
-      icon: <Flask className="h-10 w-10 text-amber-500" />
+      icon: <Beaker className="h-10 w-10 text-amber-500" />
     },
     {
       title: "Tool Implementation",
