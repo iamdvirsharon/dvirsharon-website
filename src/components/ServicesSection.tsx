@@ -1,0 +1,90 @@
+
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { TrendingUp, Search, Database, Zap, Code, ExperimentIcon } from "lucide-react";
+
+const ServicesSection = () => {
+  const services = [
+    {
+      title: "Growth Marketing Consultation",
+      description: "Strategic guidance to accelerate your business growth and maximize marketing ROI.",
+      icon: <TrendingUp className="h-10 w-10 text-amber-500" />
+    },
+    {
+      title: "CRO & Landing Page Audit",
+      description: "In-depth analysis of your conversion funnels to identify and fix conversion bottlenecks.",
+      icon: <Search className="h-10 w-10 text-amber-500" />
+    },
+    {
+      title: "Marketing Automation",
+      description: "Create and build powerful marketing and business automation systems that save time and increase efficiency.",
+      icon: <Zap className="h-10 w-10 text-amber-500" />
+    },
+    {
+      title: "Data Enrichment Services",
+      description: "Enhance your customer data to improve targeting and personalization capabilities.",
+      icon: <Database className="h-10 w-10 text-amber-500" />
+    },
+    {
+      title: "Experimentation Methods",
+      description: "Implement proven experimentation frameworks to continuously optimize your conversion rates.",
+      icon: <ExperimentIcon className="h-10 w-10 text-amber-500" />
+    },
+    {
+      title: "Tool Implementation",
+      description: "Expert setup and integration of marketing and analytics tools to power your growth stack.",
+      icon: <Code className="h-10 w-10 text-amber-500" />
+    }
+  ];
+
+  return (
+    <section id="services" className="py-20 bg-black/30">
+      <div className="container max-w-6xl mx-auto px-4">
+        <div className="text-center mb-16 animate-fade-up">
+          <h2 className="font-gloock text-3xl md:text-4xl mb-4">My Services</h2>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Comprehensive growth marketing solutions designed to optimize your conversion funnel and drive sustainable business growth.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service, index) => (
+            <Card key={index} className="bg-secondary/50 border-white/5 overflow-hidden animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
+              <CardHeader>
+                <div className="mb-4">{service.icon}</div>
+                <CardTitle className="font-gloock">{service.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-300 text-base">
+                  {service.description}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Fix ExperimentIcon as it doesn't exist in lucide-react
+const ExperimentIcon = (props: any) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M9 3h6v11h4l-7 7-7-7h4z" />
+    </svg>
+  );
+};
+
+export default ServicesSection;
