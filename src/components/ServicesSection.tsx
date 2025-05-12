@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Search, Database, Zap, Code, ExperimentIcon } from "lucide-react";
+import { TrendingUp, Search, Database, Zap, Code, Flask } from "lucide-react";
 
 const ServicesSection = () => {
   const services = [
@@ -28,7 +28,7 @@ const ServicesSection = () => {
     {
       title: "Experimentation Methods",
       description: "Implement proven experimentation frameworks to continuously optimize your conversion rates.",
-      icon: <ExperimentIcon className="h-10 w-10 text-amber-500" />
+      icon: <Flask className="h-10 w-10 text-amber-500" />
     },
     {
       title: "Tool Implementation",
@@ -64,26 +64,6 @@ const ServicesSection = () => {
         </div>
       </div>
     </section>
-  );
-};
-
-// Fix ExperimentIcon as it doesn't exist in lucide-react
-const ExperimentIcon = (props: any) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M9 3h6v11h4l-7 7-7-7h4z" />
-    </svg>
   );
 };
 
