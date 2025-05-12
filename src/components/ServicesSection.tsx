@@ -37,33 +37,85 @@ const ServicesSection = () => {
     }
   ];
 
-  return (
-    <section id="services" className="py-20 bg-black/30">
-      <div className="container max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16 animate-fade-up">
-          <h2 className="font-gloock text-3xl md:text-4xl mb-4">My Services</h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Comprehensive growth marketing solutions designed to optimize your conversion funnel and drive sustainable business growth.
-          </p>
-        </div>
+  const frameworkSteps = [
+    {
+      number: "01",
+      title: "Research",
+      description: "Identify growth opportunities and conversion optimization potential."
+    },
+    {
+      number: "02",
+      title: "Experimentation",
+      description: "Implement UX research, psychology-based design, and A/B testing."
+    },
+    {
+      number: "03",
+      title: "Implementation",
+      description: "Execute data-driven changes to increase conversions and revenue."
+    },
+    {
+      number: "04",
+      title: "Learning and Iteration",
+      description: "Growth is an ongoing process. We continuously analyze and optimize for growth."
+    }
+  ];
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, index) => (
-            <Card key={index} className="bg-secondary/50 border-white/5 overflow-hidden animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
-              <CardHeader>
-                <div className="mb-4">{service.icon}</div>
-                <CardTitle className="font-gloock">{service.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-gray-300 text-base">
-                  {service.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
+  return (
+    <>
+      <section id="services" className="py-20 bg-black/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16 animate-fade-up">
+            <h2 className="font-gloock text-3xl md:text-4xl mb-4">My Services</h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Comprehensive growth marketing solutions designed to optimize your conversion funnel and drive sustainable business growth.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <Card key={index} className="bg-secondary/50 border-white/5 overflow-hidden animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                <CardHeader>
+                  <div className="mb-4">{service.icon}</div>
+                  <CardTitle className="font-gloock">{service.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-gray-300 text-base">
+                    {service.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section id="framework" className="py-20">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16 animate-fade-up">
+            <h2 className="font-gloock text-3xl md:text-4xl mb-4">Our Growth Framework</h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Structured approach to boosting your conversions and revenue
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {frameworkSteps.map((step, index) => (
+              <Card key={index} className="bg-secondary/50 border-white/5 overflow-hidden animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                <CardHeader>
+                  <span className="text-5xl font-bold text-amber-500/50">{step.number}</span>
+                  <CardTitle className="font-gloock mt-2">{step.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-gray-300 text-base">
+                    {step.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 };
 
