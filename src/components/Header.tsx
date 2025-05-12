@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Header = () => {
@@ -13,8 +13,8 @@ const Header = () => {
             <h1 className="text-xl font-gloock tracking-wider">Dvir Sharon</h1>
           </div>
           
-          <div className="hidden md:block flex-1">
-            <nav className="flex justify-center">
+          <div className="hidden md:flex flex-1 justify-center">
+            <nav>
               <ul className="flex gap-8 font-medium">
                 <li><a href="#services" className="hover:text-blue-500 transition-colors">Services</a></li>
                 <li><a href="#framework" className="hover:text-blue-500 transition-colors">Framework</a></li>
@@ -26,8 +26,8 @@ const Header = () => {
           
           <div className="w-40 flex justify-end">
             <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer" className="hidden md:block">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1">
-                Free Discovery Call <ExternalLink className="w-4 h-4 ml-1" />
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full">
+                Book a Call
               </Button>
             </a>
           </div>
@@ -56,8 +56,8 @@ const Header = () => {
                 
                 <div className="mt-auto py-6">
                   <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                      Free Discovery Call <ExternalLink className="w-4 h-4 ml-1" />
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full">
+                      Book a Call
                     </Button>
                   </a>
                 </div>

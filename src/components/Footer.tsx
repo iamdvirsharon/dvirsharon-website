@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Twitter, Linkedin, Github } from "lucide-react";
+import { Linkedin } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -16,25 +16,13 @@ const Footer = () => {
           
           <div className="flex gap-4">
             <a 
-              href="#" 
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"
-              aria-label="Twitter"
-            >
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a 
-              href="#" 
+              href="https://www.linkedin.com/in/dvirsharon/" 
+              target="_blank" 
+              rel="noopener noreferrer"
               className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"
               aria-label="LinkedIn"
             >
               <Linkedin className="w-5 h-5" />
-            </a>
-            <a 
-              href="#" 
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"
-              aria-label="GitHub"
-            >
-              <Github className="w-5 h-5" />
             </a>
           </div>
         </div>
@@ -42,8 +30,7 @@ const Footer = () => {
         <div className="mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-400">© {currentYear} Dvir Sharon. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Terms</a>
+            <a href="mailto:iamdvirsharon@gmail.com" className="text-sm text-gray-400 hover:text-white transition-colors">iamdvirsharon@gmail.com</a>
           </div>
         </div>
       </div>

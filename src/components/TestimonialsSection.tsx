@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -88,16 +87,9 @@ const TestimonialsSection = () => {
                       <p className="text-gray-300">{testimonial.text}</p>
                     </CardContent>
                     <CardFooter className="border-t border-white/5 pt-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback className="bg-blue-600/20 text-blue-300">
-                            {testimonial.initials}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">{testimonial.name}</p>
-                          <p className="text-sm text-gray-400">{testimonial.position}</p>
-                        </div>
+                      <div>
+                        <p className="font-medium">{testimonial.name}</p>
+                        <p className="text-sm text-gray-400">{testimonial.position}</p>
                       </div>
                     </CardFooter>
                   </Card>
