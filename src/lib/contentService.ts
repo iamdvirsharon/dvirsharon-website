@@ -1,0 +1,214 @@
+
+import { WebsiteContent } from './contentTypes';
+
+// Default content structure
+const defaultContent: WebsiteContent = {
+  hero: {
+    title: 'Stop Wasting Traffic, Start Generating Leads',
+    subtitle: 'Leverage AI and growth marketing tactics to unlock your company\'s full potential. Expert in CRO, experimentation, automations, and product-led growth strategies.',
+    buttonText: 'Book a Free Call',
+    buttonLink: 'https://zcal.co/dvirsharon/30min'
+  },
+  services: [
+    {
+      title: "Growth Marketing Strategy",
+      description: "Strategic guidance to accelerate your business growth through data-driven approaches and maximize marketing ROI.",
+      icon: "trending-up"
+    },
+    {
+      title: "Conversion Rate Optimization",
+      description: "In-depth analysis of your conversion funnels to identify and fix bottlenecks, increasing revenue without increasing traffic.",
+      icon: "search"
+    },
+    {
+      title: "Marketing Automation",
+      description: "Create and build powerful marketing and business automation systems that save time, increase efficiency, and improve customer engagement.",
+      icon: "zap"
+    },
+    {
+      title: "Data Enrichment Services",
+      description: "Enhance your customer data to improve targeting, personalization capabilities, and drive informed business decisions.",
+      icon: "database"
+    },
+    {
+      title: "Experimentation Frameworks",
+      description: "Implement proven A/B testing and experimentation methods to continuously optimize conversion rates and user experience.",
+      icon: "beaker"
+    },
+    {
+      title: "Product-Led Growth",
+      description: "Develop strategies where your product itself drives user acquisition, engagement, and retention through exceptional user experiences.",
+      icon: "code"
+    }
+  ],
+  frameworkSteps: [
+    {
+      number: "01",
+      title: "Research",
+      description: "Identify growth opportunities and conversion optimization potential through data analysis and user research."
+    },
+    {
+      number: "02",
+      title: "Experimentation",
+      description: "Implement UX research, psychology-based design, and A/B testing to validate assumptions and optimize conversions."
+    },
+    {
+      number: "03",
+      title: "Implementation",
+      description: "Execute data-driven changes to increase conversions, revenue, and create sustainable growth frameworks."
+    },
+    {
+      number: "04",
+      title: "Learning and Iteration",
+      description: "Growth is an ongoing process. We continuously analyze results, refine strategies, and optimize for long-term success."
+    }
+  ],
+  integrations: [
+    {
+      name: "Gmail",
+      imagePath: "/integrations/gmail-logo.png",
+      altText: "Gmail logo"
+    },
+    {
+      name: "Outlook",
+      imagePath: "/integrations/outlook-logo.png",
+      altText: "Outlook logo"
+    },
+    {
+      name: "Slack",
+      imagePath: "/integrations/slack-logo.png",
+      altText: "Slack logo"
+    },
+    {
+      name: "Make.com",
+      imagePath: "https://images.ctfassets.net/un655fb9wln6/1k5wBPhbu5kXiaYlFWgEJE/b590772959bd510e64cf230ef37bba3e/Make-Logo-RGB.svg",
+      altText: "Make.com logo"
+    },
+    {
+      name: "HubSpot",
+      imagePath: "/integrations/hubspot-logo.png",
+      altText: "HubSpot logo"
+    },
+    {
+      name: "Salesforce",
+      imagePath: "/integrations/salesforce-logo.png",
+      altText: "Salesforce logo"
+    }
+  ],
+  testimonials: [
+    {
+      name: "David Taylor-Smith",
+      position: "Senior Growth Manager, hipages",
+      text: "Dvir was great to chat with. He was prepared, clearly a good marketer and provided clarity around challenges and outcomes. I hope to learn more of his next Growth wins!",
+      initials: "DT"
+    },
+    {
+      name: "Ben Rotenberg",
+      position: "Head of Growth, Overwolf",
+      text: "Dvir combines high-level creativity and exceptional technological capabilities. His self-learning abilities allow him to acquire any skill he needs and adapt to any challenge.",
+      initials: "BR"
+    },
+    {
+      name: "Francois Costa",
+      position: "Head of Product, FairArt",
+      text: "Within a few minutes, he was able to give several thoughtful suggestions as to how we could achieve our goals (strategy + tactics). Additionally, he encouraged me to reach out later on should any other questions come up.",
+      initials: "FC"
+    },
+    {
+      name: "Dilina Bandara",
+      position: "Software Developer, Futura Tech Labs",
+      text: "Dvir's ability to listen, provide valuable insights, and create a nurturing environment exceeded my expectations. I highly recommend him as a mentor for anyone seeking transformative guidance.",
+      initials: "DB"
+    },
+    {
+      name: "Erika Paola Vergara",
+      position: "Senior Business Development Manager, Sundevs",
+      text: "He is very practical and I think this is key to excecute and improve. Also, what he doesn't know he will tell you. He addresses the problem in parts and this is very useful to address everything.",
+      initials: "EP"
+    }
+  ],
+  companies: [
+    { name: "hipages", class: "text-xl md:text-2xl" },
+    { name: "Overwolf", class: "text-xl md:text-2xl" },
+    { name: "FairArt", class: "text-xl md:text-2xl" },
+    { name: "Futura Tech Labs", class: "text-xl md:text-2xl" },
+    { name: "Sundevs", class: "text-xl md:text-2xl" }
+  ],
+  faqs: [
+    {
+      question: "What range of services do you offer?",
+      answer: "We provide a comprehensive suite of growth-focused services, including Conversion Rate Optimization (CRO), AI implementation, product marketing, and growth marketing advisory services."
+    },
+    {
+      question: "How can AI implementation benefit my business?",
+      answer: "AI implementation can automate processes, enhance decision-making, personalize customer experiences, and uncover insights from data, leading to increased efficiency and revenue growth."
+    },
+    {
+      question: "What does your product marketing service entail?",
+      answer: "Our product marketing service covers market research, positioning, messaging, launch strategies, and ongoing optimization to ensure your product resonates with your target audience and achieves market success."
+    },
+    {
+      question: "How do you approach growth marketing advisory?",
+      answer: "We provide strategic guidance on channel selection, customer acquisition, retention strategies, and performance metrics. Our advice is tailored to your specific business goals and market conditions."
+    },
+    {
+      question: "Can you handle projects that combine multiple services?",
+      answer: "Absolutely. Many of our clients benefit from an integrated approach that leverages CRO, AI, product marketing, and growth strategies in tandem for maximum impact."
+    },
+    {
+      question: "How do you measure the success of your services?",
+      answer: "We establish clear KPIs at the outset of each project, which may include metrics like conversion rates, customer acquisition costs, lifetime value, and revenue growth. We provide regular reports and analytics to track progress."
+    },
+    {
+      question: "What's your typical engagement process?",
+      answer: "We start with a discovery call to understand your needs, followed by a tailored proposal outlining objectives, strategies, timelines, and expected outcomes. Once approved, we implement, monitor, and refine based on data-driven insights."
+    },
+    {
+      question: "Do you offer any guarantees?",
+      answer: "While we can't guarantee specific results due to the many variables involved, we do guarantee our commitment to data-driven strategies, continuous optimization, and transparent communication throughout our engagement."
+    }
+  ],
+  contactCTA: {
+    title: "Book a call today.",
+    buttonText: "Let's Chat",
+    buttonLink: "https://zcal.co/dvirsharon/30min"
+  }
+};
+
+// LocalStorage key for website content
+const CONTENT_STORAGE_KEY = 'website_content';
+
+// Get website content from localStorage or use default
+export function getWebsiteContent(): WebsiteContent {
+  const storedContent = localStorage.getItem(CONTENT_STORAGE_KEY);
+  if (storedContent) {
+    try {
+      return JSON.parse(storedContent);
+    } catch (e) {
+      console.error('Failed to parse stored content', e);
+      return defaultContent;
+    }
+  }
+  return defaultContent;
+}
+
+// Save website content to localStorage
+export function saveWebsiteContent(content: WebsiteContent): void {
+  localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(content));
+}
+
+// Reset website content to default
+export function resetWebsiteContent(): WebsiteContent {
+  localStorage.removeItem(CONTENT_STORAGE_KEY);
+  return defaultContent;
+}
+
+// Helper function to save a specific section
+export function saveContentSection<K extends keyof WebsiteContent>(
+  section: K, 
+  data: WebsiteContent[K]
+): void {
+  const currentContent = getWebsiteContent();
+  const updatedContent = { ...currentContent, [section]: data };
+  saveWebsiteContent(updatedContent);
+}

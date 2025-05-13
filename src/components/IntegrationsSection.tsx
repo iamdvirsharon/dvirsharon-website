@@ -1,43 +1,16 @@
+
 import React, { useEffect, useRef } from "react";
+import { useWebsiteContent } from "@/hooks/useWebsiteContent";
 
 const IntegrationsSection = () => {
-  const integrations = [
-    {
-      name: "Gmail",
-      imagePath: "/integrations/gmail-logo.png", // Path to your image
-      altText: "Gmail logo"
-    }, 
-    {
-      name: "Outlook",
-      imagePath: "/integrations/outlook-logo.png",
-      altText: "Outlook logo"
-    }, 
-    {
-      name: "Slack",
-      imagePath: "/integrations/slack-logo.png",
-      altText: "Slack logo"
-    }, 
-    {
-      name: "Make.com",
-      imagePath: "https://images.ctfassets.net/un655fb9wln6/1k5wBPhbu5kXiaYlFWgEJE/b590772959bd510e64cf230ef37bba3e/Make-Logo-RGB.svg",
-      altText: "Make.com logo"
-    },
-    {
-      name: "HubSpot",
-      imagePath: "/integrations/hubspot-logo.png",
-      altText: "HubSpot logo"
-    }, 
-    {
-      name: "Salesforce",
-      imagePath: "/integrations/salesforce-logo.png",
-      altText: "Salesforce logo"
-    }
-  ];
+  const { content, isLoaded } = useWebsiteContent();
   
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
+    if (!isLoaded) return;
+    
     const container = containerRef.current;
     const content = contentRef.current;
     if (!container || !content) return;
@@ -66,7 +39,9 @@ const IntegrationsSection = () => {
     return () => {
       cancelAnimationFrame(animation);
     };
-  }, []);
+  }, [isLoaded]);
+
+  if (!isLoaded) return null;
 
   return (
     <section className="py-16 bg-black/30 overflow-hidden">
@@ -82,7 +57,7 @@ const IntegrationsSection = () => {
           <div className="overflow-hidden w-full">
             <div ref={containerRef} className="inline-flex transition-transform">
               <div ref={contentRef} className="flex items-center justify-around gap-16 px-8">
-                {integrations.map((integration, index) => (
+                {content.integrations.map((integration, index) => (
                   <div key={index} className="flex items-center justify-center h-12 transition-opacity hover:opacity-100 opacity-70">
                     {integration.imagePath ? (
                       <img 
