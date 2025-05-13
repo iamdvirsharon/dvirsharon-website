@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, Search, Database, Zap, Code, Beaker, LineChart, BarChart } from "lucide-react";
@@ -112,8 +111,7 @@ const ServicesSection = () => {
             {frameworkSteps.map((step, index) => (
               <Card key={index} className="bg-secondary/50 border-white/5 overflow-hidden animate-fade-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <CardHeader>
-                  <span className="text-5xl font-bold text-blue-500/50">{step.number}</span>
-                  <CardTitle className="font-light mt-2">{step.title}</CardTitle>
+                  <CardTitle className="font-light">{step.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="text-gray-300 text-base">
