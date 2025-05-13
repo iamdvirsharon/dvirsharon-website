@@ -49,7 +49,7 @@ const IntegrationsSection = () => {
   return <section className="py-16 bg-black/30 overflow-hidden">
       <div className="container max-w-6xl mx-auto px-4">
         <div className="text-center mb-10 animate-fade-up">
-          <h2 className="font-gloock text-5xl md:text-6xl mb-4">Integrations</h2>
+          <h2 className="font-gloock text-5xl md:text-6xl mb-4">Integrate our AI system into your existing tech stack</h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             We work with you to integrate our systems into your existing tech-stack
           </p>
