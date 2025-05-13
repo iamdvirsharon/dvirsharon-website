@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 
 const IntegrationsSection = () => {
@@ -19,6 +18,11 @@ const IntegrationsSection = () => {
       altText: "Slack logo"
     }, 
     {
+      name: "Make.com",
+      imagePath: "https://images.ctfassets.net/un655fb9wln6/1k5wBPhbu5kXiaYlFWgEJE/b590772959bd510e64cf230ef37bba3e/Make-Logo-RGB.svg",
+      altText: "Make.com logo"
+    },
+    {
       name: "HubSpot",
       imagePath: "/integrations/hubspot-logo.png",
       altText: "HubSpot logo"
@@ -27,11 +31,6 @@ const IntegrationsSection = () => {
       name: "Salesforce",
       imagePath: "/integrations/salesforce-logo.png",
       altText: "Salesforce logo"
-    }, 
-    {
-      name: "SmartLead",
-      imagePath: "/integrations/smartlead-logo.png",
-      altText: "SmartLead logo"
     }
   ];
   
