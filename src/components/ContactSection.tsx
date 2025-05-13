@@ -48,36 +48,18 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-20 bg-black/30">
       <div className="container max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16 animate-fade-up">
-          <h2 className="font-light text-3xl md:text-4xl mb-4">Ready to Transform Your Growth Strategy?</h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Book a free 30-minute consultation to discuss how I can help you optimize your conversion funnel and accelerate growth.
-          </p>
-        </div>
-
-        <div className="max-w-md mx-auto mb-20">
-          <div className="glass-effect p-8 rounded-lg animate-fade-up text-center">
-            <div className="space-y-6">
-              <h3 className="font-light text-2xl">Schedule a Call</h3>
-              <p className="text-gray-300">
-                No pressure, just a conversation about your goals and how I might be able to help your business grow.
-              </p>
-              <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full">
-                  Book a 30-Minute Call
-                </Button>
-              </a>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-white/10 flex justify-center">
-              <a href="mailto:iamdvirsharon@gmail.com" className="flex items-center justify-center gap-2 text-gray-300 hover:text-blue-500 transition-colors">
-                <Mail className="w-5 h-5" /> iamdvirsharon@gmail.com
-              </a>
-            </div>
+        <div className="text-center mb-20 animate-fade-up">
+          <h2 className="font-gloock text-5xl md:text-6xl mb-4">Book a call today.</h2>
+          <div className="flex justify-center mt-8">
+            <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-10 rounded-full">
+                Let's Chat
+              </Button>
+            </a>
           </div>
         </div>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto mt-32">
           <h3 className="font-light text-2xl mb-6 text-center">Frequently Asked Questions</h3>
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (

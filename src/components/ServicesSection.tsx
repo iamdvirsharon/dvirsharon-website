@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Search, Database, Zap, Code, Beaker, LineChart, BarChart } from "lucide-react";
+import { TrendingUp, Search, Database, Zap, Code, Beaker } from "lucide-react";
 
 const ServicesSection = () => {
   const services = [
@@ -32,16 +33,6 @@ const ServicesSection = () => {
     {
       title: "Product-Led Growth",
       description: "Develop strategies where your product itself drives user acquisition, engagement, and retention through exceptional user experiences.",
-      icon: <BarChart className="h-10 w-10 text-blue-500" />
-    },
-    {
-      title: "Digital Analytics Implementation",
-      description: "Set up robust analytics infrastructures to track, measure, and interpret user behavior and business performance metrics.",
-      icon: <LineChart className="h-10 w-10 text-blue-500" />
-    },
-    {
-      title: "MarTech Integration",
-      description: "Expert setup and integration of marketing and analytics tools to power your growth stack and marketing ecosystem.",
       icon: <Code className="h-10 w-10 text-blue-500" />
     }
   ];
