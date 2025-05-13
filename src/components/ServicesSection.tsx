@@ -48,7 +48,7 @@ const ServicesSection = () => {
       <section id="services" className="py-20 bg-black/30">
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-16 animate-fade-up">
-            <h2 className="font-light text-3xl md:text-4xl mb-4">My Services</h2>
+            <h2 className="font-gloock text-5xl md:text-6xl mb-4">My Services</h2>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
               Comprehensive growth marketing solutions designed to optimize your conversion funnel and drive sustainable business growth.
             </p>
