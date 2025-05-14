@@ -28,9 +28,11 @@ const IntegrationsSection = () => {
       // Reset position when first set of logos moves out of view completely
       if (scrollPosition >= totalWidth) {
         scrollPosition = 0;
+        container.style.transform = `translateX(0)`;
+      } else {
+        container.style.transform = `translateX(-${scrollPosition}px)`;
       }
       
-      container.style.transform = `translateX(-${scrollPosition}px)`;
       requestAnimationFrame(scroll);
     };
     
