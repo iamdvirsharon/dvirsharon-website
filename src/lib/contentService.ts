@@ -1,5 +1,6 @@
 
 import { WebsiteContent } from './contentTypes';
+import { supabase } from './supabase';
 
 // Default content structure
 const defaultContent: WebsiteContent = {
@@ -177,9 +178,34 @@ const defaultContent: WebsiteContent = {
 
 // LocalStorage key for website content
 const CONTENT_STORAGE_KEY = 'website_content';
+const SUPABASE_CONTENT_TABLE = 'website_content';
+
+// Get website content from Supabase or use localStorage as fallback
+export async function fetchWebsiteContent(): Promise<WebsiteContent> {
+  try {
+    // Try to get content from Supabase
+    const { data, error } = await supabase
+      .from(SUPABASE_CONTENT_TABLE)
+      .select('content')
+      .single();
+    
+    if (error) throw error;
+    
+    if (data && data.content) {
+      // Also update localStorage for offline access
+      localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(data.content));
+      return data.content as WebsiteContent;
+    }
+  } catch (e) {
+    console.error('Failed to fetch content from Supabase:', e);
+  }
+  
+  // Fallback to localStorage if Supabase fetch fails
+  return getLocalWebsiteContent();
+}
 
 // Get website content from localStorage or use default
-export function getWebsiteContent(): WebsiteContent {
+export function getLocalWebsiteContent(): WebsiteContent {
   const storedContent = localStorage.getItem(CONTENT_STORAGE_KEY);
   if (storedContent) {
     try {
@@ -192,23 +218,64 @@ export function getWebsiteContent(): WebsiteContent {
   return defaultContent;
 }
 
-// Save website content to localStorage
-export function saveWebsiteContent(content: WebsiteContent): void {
+// Save website content to both Supabase and localStorage
+export async function saveWebsiteContent(content: WebsiteContent): Promise<void> {
+  // Save to localStorage first (for offline access and as backup)
   localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(content));
+  
+  try {
+    // Check if record exists
+    const { data } = await supabase
+      .from(SUPABASE_CONTENT_TABLE)
+      .select('id')
+      .limit(1);
+    
+    if (data && data.length > 0) {
+      // Update existing record
+      await supabase
+        .from(SUPABASE_CONTENT_TABLE)
+        .update({ content: content })
+        .eq('id', data[0].id);
+    } else {
+      // Insert new record
+      await supabase
+        .from(SUPABASE_CONTENT_TABLE)
+        .insert({ content: content });
+    }
+  } catch (e) {
+    console.error('Failed to save content to Supabase:', e);
+    // Continue even if Supabase save fails - data is still in localStorage
+  }
 }
 
 // Reset website content to default
-export function resetWebsiteContent(): WebsiteContent {
+export async function resetWebsiteContent(): Promise<WebsiteContent> {
   localStorage.removeItem(CONTENT_STORAGE_KEY);
+  
+  try {
+    // Delete content from Supabase
+    await supabase
+      .from(SUPABASE_CONTENT_TABLE)
+      .delete()
+      .neq('id', 0); // Delete all records
+      
+    // Insert default content
+    await supabase
+      .from(SUPABASE_CONTENT_TABLE)
+      .insert({ content: defaultContent });
+  } catch (e) {
+    console.error('Failed to reset content in Supabase:', e);
+  }
+  
   return defaultContent;
 }
 
 // Helper function to save a specific section
-export function saveContentSection<K extends keyof WebsiteContent>(
+export async function saveContentSection<K extends keyof WebsiteContent>(
   section: K, 
   data: WebsiteContent[K]
-): void {
-  const currentContent = getWebsiteContent();
+): Promise<void> {
+  const currentContent = await fetchWebsiteContent();
   const updatedContent = { ...currentContent, [section]: data };
-  saveWebsiteContent(updatedContent);
+  await saveWebsiteContent(updatedContent);
 }

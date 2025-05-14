@@ -1,34 +1,65 @@
 
 import { useState, useEffect } from 'react';
 import { WebsiteContent } from '@/lib/contentTypes';
-import { getWebsiteContent, saveWebsiteContent, resetWebsiteContent, saveContentSection } from '@/lib/contentService';
+import { 
+  fetchWebsiteContent,
+  getLocalWebsiteContent, 
+  saveWebsiteContent, 
+  resetWebsiteContent, 
+  saveContentSection 
+} from '@/lib/contentService';
 
 export function useWebsiteContent() {
-  const [content, setContent] = useState<WebsiteContent>(getWebsiteContent());
+  // Start with localStorage content for immediate rendering
+  const [content, setContent] = useState<WebsiteContent>(getLocalWebsiteContent());
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    setContent(getWebsiteContent());
-    setIsLoaded(true);
+    // Then fetch from Supabase
+    const loadContent = async () => {
+      try {
+        const serverContent = await fetchWebsiteContent();
+        setContent(serverContent);
+      } catch (error) {
+        console.error("Error loading content:", error);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+    
+    loadContent();
   }, []);
 
-  const updateContent = (newContent: WebsiteContent) => {
-    saveWebsiteContent(newContent);
-    setContent(newContent);
+  const updateContent = async (newContent: WebsiteContent) => {
+    try {
+      await saveWebsiteContent(newContent);
+      setContent(newContent);
+    } catch (error) {
+      console.error("Error updating content:", error);
+    }
   };
 
-  const updateSection = <K extends keyof WebsiteContent>(
+  const updateSection = async <K extends keyof WebsiteContent>(
     section: K, 
     sectionData: WebsiteContent[K]
   ) => {
-    saveContentSection(section, sectionData);
-    setContent(prev => ({ ...prev, [section]: sectionData }));
+    try {
+      await saveContentSection(section, sectionData);
+      setContent(prev => ({ ...prev, [section]: sectionData }));
+    } catch (error) {
+      console.error(`Error updating section ${String(section)}:`, error);
+    }
   };
 
-  const resetContent = () => {
-    const defaultContent = resetWebsiteContent();
-    setContent(defaultContent);
-    return defaultContent;
+  const resetContentData = async () => {
+    try {
+      const defaultContent = await resetWebsiteContent();
+      setContent(defaultContent);
+      return defaultContent;
+    } catch (error) {
+      console.error("Error resetting content:", error);
+      return content;
+    }
   };
 
   return {
@@ -36,6 +67,6 @@ export function useWebsiteContent() {
     isLoaded,
     updateContent,
     updateSection,
-    resetContent
+    resetContent: resetContentData
   };
 }

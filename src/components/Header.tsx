@@ -18,15 +18,15 @@ const Header = () => {
     <header className="fixed w-full top-0 z-50 py-4 glass-effect">
       <div className="container max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center">
+          <div className="flex-shrink-0">
             <h1 className="text-xl font-gloock tracking-wider">Dvir Sharon</h1>
           </div>
           
-          <div className="hidden md:flex justify-center">
+          <div className="hidden md:block flex-1 justify-center">
             <NavBar items={navItems} className="relative static mb-0 mt-0 transform-none" />
           </div>
           
-          <div className="flex justify-end">
+          <div className="flex-shrink-0">
             <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer" className="hidden md:block">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full">
                 Let's Talk
