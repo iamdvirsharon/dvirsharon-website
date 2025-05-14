@@ -3,8 +3,17 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { NavBar } from "@/components/ui/tubelight-navbar";
+import { Home, User, Briefcase, FileText } from "lucide-react";
 
 const Header = () => {
+  const navItems = [
+    { name: "Services", url: "#services", icon: Briefcase },
+    { name: "Framework", url: "#framework", icon: FileText },
+    { name: "Testimonials", url: "#testimonials", icon: User },
+    { name: "Contact", url: "#contact", icon: Home },
+  ];
+
   return (
     <header className="fixed w-full top-0 z-50 py-4 glass-effect">
       <div className="container max-w-6xl mx-auto px-4">
@@ -14,20 +23,13 @@ const Header = () => {
           </div>
           
           <div className="hidden md:flex flex-1 justify-center">
-            <nav>
-              <ul className="flex gap-8 font-medium">
-                <li><a href="#services" className="hover:text-blue-500 transition-colors">Services</a></li>
-                <li><a href="#framework" className="hover:text-blue-500 transition-colors">Framework</a></li>
-                <li><a href="#testimonials" className="hover:text-blue-500 transition-colors">Testimonials</a></li>
-                <li><a href="#contact" className="hover:text-blue-500 transition-colors">Contact</a></li>
-              </ul>
-            </nav>
+            <NavBar items={navItems} className="relative static mb-0 mt-0 transform-none" />
           </div>
           
           <div className="w-40 flex justify-end">
             <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer" className="hidden md:block">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full">
-                Book a Call
+                Let's Talk
               </Button>
             </a>
           </div>
@@ -57,7 +59,7 @@ const Header = () => {
                 <div className="mt-auto py-6">
                   <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer">
                     <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full">
-                      Book a Call
+                      Let's Talk
                     </Button>
                   </a>
                 </div>
