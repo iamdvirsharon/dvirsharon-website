@@ -28,7 +28,7 @@ const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href={content.hero.buttonLink} target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto rounded-full">
-                  {content.hero.buttonText}
+                  Let's Talk
                 </Button>
               </a>
               <a href="#services">

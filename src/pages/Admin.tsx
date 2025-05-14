@@ -12,20 +12,47 @@ import { Textarea } from '@/components/ui/textarea';
 import ImageUploader from '@/components/admin/ImageUploader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, Search, Database, Zap, Code, Beaker, PlusCircle, X, Trash2 } from 'lucide-react';
-import { ServiceItem, IntegrationItem, TestimonialItem, CompanyItem, FAQItem, FrameworkStep } from '@/lib/contentTypes';
+import { ServiceItem, IntegrationItem, TestimonialItem, CompanyItem, FAQItem, FrameworkStep, WebsiteContent } from '@/lib/contentTypes';
 
 export default function AdminPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('hero');
   const navigate = useNavigate();
   const { content, isLoaded, updateSection, resetContent } = useWebsiteContent();
-
+  const [pageTitle, setPageTitle] = useState('');
+  const [pageDescription, setPageDescription] = useState('');
+  
   useEffect(() => {
     const loginStatus = localStorage.getItem('isAdminLoggedIn');
     if (loginStatus === 'true') {
       setIsLoggedIn(true);
     }
+    
+    // Load current page title and description
+    setPageTitle(document.title);
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      setPageDescription(metaDescription.getAttribute('content') || '');
+    }
   }, []);
+  
+  // Function to update page title and meta description
+  const updatePageMeta = () => {
+    document.title = pageTitle;
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', pageDescription);
+    }
+    
+    // Save to localStorage for persistence
+    localStorage.setItem('pageTitle', pageTitle);
+    localStorage.setItem('pageDescription', pageDescription);
+    
+    toast({
+      title: "Meta data updated",
+      description: "Page title and description have been updated",
+    });
+  };
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -67,36 +94,54 @@ export default function AdminPage() {
     'beaker': <Beaker className="h-10 w-10 text-blue-500" />
   };
 
-  // Helper function to update array items
-  const updateArrayItem = <T extends unknown>(
-    section: keyof typeof content,
+  // Helper function to update array items with proper type safety
+  const updateArrayItem = <T extends ServiceItem | FrameworkStep | IntegrationItem | TestimonialItem | CompanyItem | FAQItem>(
+    section: keyof WebsiteContent,
     index: number,
     field: keyof T,
     value: any
   ) => {
-    const items = [...content[section] as T[]];
+    const items = [...(content[section] as T[])];
     items[index] = { ...items[index], [field]: value };
-    updateSection(section, items);
+    updateSection(section, items as WebsiteContent[typeof section]);
+    
+    // Auto-save on change
+    toast({
+      title: "Change saved",
+      description: `Updated ${field.toString()} in ${section}`,
+    });
   };
 
-  // Helper function to add array items
-  const addArrayItem = <T extends unknown>(
-    section: keyof typeof content,
+  // Helper function to add array items with proper type safety
+  const addArrayItem = <T extends ServiceItem | FrameworkStep | IntegrationItem | TestimonialItem | CompanyItem | FAQItem>(
+    section: keyof WebsiteContent,
     newItem: T
   ) => {
-    const items = [...content[section] as T[]];
+    const items = [...(content[section] as T[])];
     items.push(newItem);
-    updateSection(section, items);
+    updateSection(section, items as WebsiteContent[typeof section]);
+    
+    // Auto-save on change
+    toast({
+      title: "Item added",
+      description: `Added new item to ${section}`,
+    });
   };
 
-  // Helper function to remove array items
-  const removeArrayItem = <T extends unknown>(
-    section: keyof typeof content,
+  // Helper function to remove array items with proper type safety
+  const removeArrayItem = <T extends ServiceItem | FrameworkStep | IntegrationItem | TestimonialItem | CompanyItem | FAQItem>(
+    section: keyof WebsiteContent,
     index: number
   ) => {
-    const items = [...content[section] as T[]];
+    const items = [...(content[section] as T[])];
     items.splice(index, 1);
-    updateSection(section, items);
+    updateSection(section, items as WebsiteContent[typeof section]);
+    
+    // Auto-save on change
+    toast({
+      title: "Item removed",
+      description: `Removed item from ${section}`,
+    });
   };
 
   if (!isLoggedIn) {
@@ -130,13 +175,14 @@ export default function AdminPage() {
               onClick={handleSave}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
             >
-              Save Changes
+              Save All Changes
             </Button>
           </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 md:grid-cols-8 mb-6">
+          <TabsList className="grid grid-cols-4 md:grid-cols-9 mb-6">
+            <TabsTrigger value="meta">Meta</TabsTrigger>
             <TabsTrigger value="hero">Hero</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="framework">Framework</TabsTrigger>
@@ -147,6 +193,33 @@ export default function AdminPage() {
             <TabsTrigger value="contact">Contact</TabsTrigger>
           </TabsList>
 
+          {/* Meta Information Tab */}
+          <TabsContent value="meta" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Page Meta Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Page Title</label>
+                  <Input
+                    value={pageTitle}
+                    onChange={(e) => setPageTitle(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Meta Description</label>
+                  <Textarea
+                    value={pageDescription}
+                    onChange={(e) => setPageDescription(e.target.value)}
+                    className="min-h-[100px]"
+                  />
+                </div>
+                <Button onClick={updatePageMeta}>Update Meta Information</Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Hero Section Tab */}
           <TabsContent value="hero" className="space-y-6">
             <div className="space-y-2">
@@ -154,7 +227,14 @@ export default function AdminPage() {
               <Textarea
                 className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
                 value={content.hero.title}
-                onChange={(e) => updateSection('hero', { ...content.hero, title: e.target.value })}
+                onChange={(e) => {
+                  updateSection('hero', { ...content.hero, title: e.target.value });
+                  // Auto-save feedback
+                  toast({
+                    title: "Change saved",
+                    description: "Updated hero title",
+                  });
+                }}
               />
             </div>
 
@@ -163,7 +243,14 @@ export default function AdminPage() {
               <Textarea
                 className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
                 value={content.hero.subtitle}
-                onChange={(e) => updateSection('hero', { ...content.hero, subtitle: e.target.value })}
+                onChange={(e) => {
+                  updateSection('hero', { ...content.hero, subtitle: e.target.value });
+                  // Auto-save feedback
+                  toast({
+                    title: "Change saved",
+                    description: "Updated hero subtitle",
+                  });
+                }}
               />
             </div>
 
@@ -172,14 +259,28 @@ export default function AdminPage() {
                 <label className="text-sm font-medium">Button Text</label>
                 <Input
                   value={content.hero.buttonText}
-                  onChange={(e) => updateSection('hero', { ...content.hero, buttonText: e.target.value })}
+                  onChange={(e) => {
+                    updateSection('hero', { ...content.hero, buttonText: e.target.value });
+                    // Auto-save feedback
+                    toast({
+                      title: "Change saved",
+                      description: "Updated button text",
+                    });
+                  }}
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Button Link</label>
                 <Input
                   value={content.hero.buttonLink}
-                  onChange={(e) => updateSection('hero', { ...content.hero, buttonLink: e.target.value })}
+                  onChange={(e) => {
+                    updateSection('hero', { ...content.hero, buttonLink: e.target.value });
+                    // Auto-save feedback
+                    toast({
+                      title: "Change saved",
+                      description: "Updated button link",
+                    });
+                  }}
                 />
               </div>
             </div>
@@ -194,7 +295,7 @@ export default function AdminPage() {
                     variant="ghost" 
                     size="icon" 
                     className="absolute top-2 right-2 text-red-500 hover:bg-red-500/10 hover:text-red-600"
-                    onClick={() => removeArrayItem('services', index)}
+                    onClick={() => removeArrayItem<ServiceItem>('services', index)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -262,7 +363,7 @@ export default function AdminPage() {
                     variant="ghost" 
                     size="icon" 
                     className="absolute top-2 right-2 text-red-500 hover:bg-red-500/10 hover:text-red-600"
-                    onClick={() => removeArrayItem('frameworkSteps', index)}
+                    onClick={() => removeArrayItem<FrameworkStep>('frameworkSteps', index)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -322,7 +423,7 @@ export default function AdminPage() {
                     variant="ghost" 
                     size="icon" 
                     className="absolute top-2 right-2 text-red-500 hover:bg-red-500/10 hover:text-red-600"
-                    onClick={() => removeArrayItem('integrations', index)}
+                    onClick={() => removeArrayItem<IntegrationItem>('integrations', index)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -382,7 +483,7 @@ export default function AdminPage() {
                     variant="ghost" 
                     size="icon" 
                     className="absolute top-2 right-2 text-red-500 hover:bg-red-500/10 hover:text-red-600"
-                    onClick={() => removeArrayItem('testimonials', index)}
+                    onClick={() => removeArrayItem<TestimonialItem>('testimonials', index)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -451,7 +552,7 @@ export default function AdminPage() {
                     variant="ghost" 
                     size="icon" 
                     className="absolute top-2 right-2 text-red-500 hover:bg-red-500/10 hover:text-red-600"
-                    onClick={() => removeArrayItem('companies', index)}
+                    onClick={() => removeArrayItem<CompanyItem>('companies', index)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -502,7 +603,7 @@ export default function AdminPage() {
                     variant="ghost" 
                     size="icon" 
                     className="absolute top-2 right-2 text-red-500 hover:bg-red-500/10 hover:text-red-600"
-                    onClick={() => removeArrayItem('faqs', index)}
+                    onClick={() => removeArrayItem<FAQItem>('faqs', index)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -550,7 +651,13 @@ export default function AdminPage() {
               <label className="text-sm font-medium">CTA Title</label>
               <Input
                 value={content.contactCTA.title}
-                onChange={(e) => updateSection('contactCTA', { ...content.contactCTA, title: e.target.value })}
+                onChange={(e) => {
+                  updateSection('contactCTA', { ...content.contactCTA, title: e.target.value });
+                  toast({
+                    title: "Change saved",
+                    description: "Updated CTA title",
+                  });
+                }}
               />
             </div>
 
@@ -559,7 +666,13 @@ export default function AdminPage() {
                 <label className="text-sm font-medium">Button Text</label>
                 <Input
                   value={content.contactCTA.buttonText}
-                  onChange={(e) => updateSection('contactCTA', { ...content.contactCTA, buttonText: e.target.value })}
+                  onChange={(e) => {
+                    updateSection('contactCTA', { ...content.contactCTA, buttonText: e.target.value });
+                    toast({
+                      title: "Change saved",
+                      description: "Updated button text",
+                    });
+                  }}
                 />
               </div>
               
@@ -567,7 +680,13 @@ export default function AdminPage() {
                 <label className="text-sm font-medium">Button Link</label>
                 <Input
                   value={content.contactCTA.buttonLink}
-                  onChange={(e) => updateSection('contactCTA', { ...content.contactCTA, buttonLink: e.target.value })}
+                  onChange={(e) => {
+                    updateSection('contactCTA', { ...content.contactCTA, buttonLink: e.target.value });
+                    toast({
+                      title: "Change saved",
+                      description: "Updated button link",
+                    });
+                  }}
                 />
               </div>
             </div>

@@ -23,7 +23,7 @@ const ContactSection = () => {
           <div className="flex justify-center mt-8">
             <a href={content.contactCTA.buttonLink} target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-10 rounded-full">
-                {content.contactCTA.buttonText}
+                Let's Talk
               </Button>
             </a>
           </div>

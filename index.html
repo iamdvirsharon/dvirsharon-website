@@ -19,6 +19,30 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <script>
+      // Load saved meta data if present
+      window.addEventListener('DOMContentLoaded', function() {
+        const savedTitle = localStorage.getItem('pageTitle');
+        const savedDescription = localStorage.getItem('pageDescription');
+        
+        if (savedTitle) {
+          document.title = savedTitle;
+        }
+        
+        if (savedDescription) {
+          const metaDescription = document.querySelector('meta[name="description"]');
+          if (metaDescription) {
+            metaDescription.setAttribute('content', savedDescription);
+          }
+          
+          const ogDescription = document.querySelector('meta[property="og:description"]');
+          if (ogDescription) {
+            ogDescription.setAttribute('content', savedDescription);
+          }
+        }
+      });
+    </script>
   </head>
 
   <body>
