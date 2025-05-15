@@ -1,6 +1,7 @@
 
 import { WebsiteContent } from './contentTypes';
 import { supabase } from '@/integrations/supabase/client';
+import { Json } from '@/integrations/supabase/types';
 
 // Default content structure
 const defaultContent: WebsiteContent = {
@@ -180,6 +181,28 @@ const defaultContent: WebsiteContent = {
 const CONTENT_STORAGE_KEY = 'website_content';
 const SUPABASE_CONTENT_TABLE = 'website_content';
 
+// Helper functions for type conversion
+const isWebsiteContent = (content: unknown): content is WebsiteContent => {
+  const c = content as Partial<WebsiteContent>;
+  return (
+    c !== null &&
+    typeof c === 'object' &&
+    'hero' in c &&
+    'services' in c &&
+    'frameworkSteps' in c &&
+    'integrations' in c &&
+    'testimonials' in c &&
+    'companies' in c &&
+    'faqs' in c &&
+    'contactCTA' in c
+  );
+};
+
+// Convert WebsiteContent to Json type for Supabase
+const websiteContentToJson = (content: WebsiteContent): Json => {
+  return content as unknown as Json;
+};
+
 // Get website content from Supabase or use localStorage as fallback
 export async function fetchWebsiteContent(): Promise<WebsiteContent> {
   try {
@@ -192,9 +215,15 @@ export async function fetchWebsiteContent(): Promise<WebsiteContent> {
     if (error) throw error;
     
     if (data && data.content) {
-      // Also update localStorage for offline access
-      localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(data.content));
-      return data.content as WebsiteContent;
+      // Check and convert the content to WebsiteContent
+      const contentData = data.content;
+      if (isWebsiteContent(contentData)) {
+        // Also update localStorage for offline access
+        localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(contentData));
+        return contentData;
+      } else {
+        console.error('Retrieved content does not match WebsiteContent structure', contentData);
+      }
     }
   } catch (e) {
     console.error('Failed to fetch content from Supabase:', e);
@@ -209,7 +238,12 @@ export function getLocalWebsiteContent(): WebsiteContent {
   const storedContent = localStorage.getItem(CONTENT_STORAGE_KEY);
   if (storedContent) {
     try {
-      return JSON.parse(storedContent);
+      const parsedContent = JSON.parse(storedContent);
+      if (isWebsiteContent(parsedContent)) {
+        return parsedContent;
+      }
+      console.error('Stored content does not match WebsiteContent structure', parsedContent);
+      return defaultContent;
     } catch (e) {
       console.error('Failed to parse stored content', e);
       return defaultContent;
@@ -234,13 +268,13 @@ export async function saveWebsiteContent(content: WebsiteContent): Promise<void>
       // Update existing record
       await supabase
         .from(SUPABASE_CONTENT_TABLE)
-        .update({ content: content })
+        .update({ content: websiteContentToJson(content) })
         .eq('id', data[0].id);
     } else {
       // Insert new record
       await supabase
         .from(SUPABASE_CONTENT_TABLE)
-        .insert({ content: content });
+        .insert({ content: websiteContentToJson(content) });
     }
   } catch (e) {
     console.error('Failed to save content to Supabase:', e);
@@ -262,7 +296,7 @@ export async function resetWebsiteContent(): Promise<WebsiteContent> {
     // Insert default content
     await supabase
       .from(SUPABASE_CONTENT_TABLE)
-      .insert({ content: defaultContent });
+      .insert({ content: websiteContentToJson(defaultContent) });
   } catch (e) {
     console.error('Failed to reset content in Supabase:', e);
   }
