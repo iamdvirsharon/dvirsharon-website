@@ -1,6 +1,6 @@
 
 import { WebsiteContent } from './contentTypes';
-import { supabase } from './supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 // Default content structure
 const defaultContent: WebsiteContent = {
