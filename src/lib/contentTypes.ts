@@ -4,6 +4,7 @@ export interface HeroContent {
   subtitle: string;
   buttonText: string;
   buttonLink: string;
+  isVisible: boolean;
 }
 
 export interface ServiceItem {
@@ -53,5 +54,17 @@ export interface WebsiteContent {
     title: string;
     buttonText: string;
     buttonLink: string;
+    isVisible: boolean;
+  };
+  // Section visibility controls
+  sectionsVisibility: {
+    hero: boolean;
+    services: boolean;
+    framework: boolean;
+    integrations: boolean;
+    testimonials: boolean;
+    companies: boolean;
+    faqs: boolean;
+    contact: boolean;
   };
 }

@@ -19,6 +19,21 @@ export function useWebsiteContent() {
     const loadContent = async () => {
       try {
         const serverContent = await fetchWebsiteContent();
+        
+        // Ensure sectionsVisibility exists
+        if (!serverContent.sectionsVisibility) {
+          serverContent.sectionsVisibility = {
+            hero: true,
+            services: true,
+            framework: true,
+            integrations: true,
+            testimonials: true,
+            companies: true,
+            faqs: true,
+            contact: true
+          };
+        }
+        
         setContent(serverContent);
       } catch (error) {
         console.error("Error loading content:", error);

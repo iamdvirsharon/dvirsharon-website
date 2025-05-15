@@ -9,7 +9,8 @@ const defaultContent: WebsiteContent = {
     title: 'Stop Wasting Traffic, Start Generating Leads',
     subtitle: 'Leverage AI and growth marketing tactics to unlock your company\'s full potential. Expert in CRO, experimentation, automations, and product-led growth strategies.',
     buttonText: 'Book a Free Call',
-    buttonLink: 'https://zcal.co/dvirsharon/30min'
+    buttonLink: 'https://zcal.co/dvirsharon/30min',
+    isVisible: true
   },
   services: [
     {
@@ -173,7 +174,19 @@ const defaultContent: WebsiteContent = {
   contactCTA: {
     title: "Book a call today.",
     buttonText: "Let's Chat",
-    buttonLink: "https://zcal.co/dvirsharon/30min"
+    buttonLink: "https://zcal.co/dvirsharon/30min",
+    isVisible: true
+  },
+  // Default section visibility
+  sectionsVisibility: {
+    hero: true,
+    services: true,
+    framework: true,
+    integrations: true,
+    testimonials: true,
+    companies: true,
+    faqs: true,
+    contact: true
   }
 };
 
@@ -240,7 +253,16 @@ export function getLocalWebsiteContent(): WebsiteContent {
     try {
       const parsedContent = JSON.parse(storedContent);
       if (isWebsiteContent(parsedContent)) {
-        return parsedContent;
+        // Ensure all new fields are present by merging with default
+        return {
+          ...defaultContent,
+          ...parsedContent,
+          // Ensure sectionsVisibility exists
+          sectionsVisibility: {
+            ...defaultContent.sectionsVisibility,
+            ...(parsedContent.sectionsVisibility || {})
+          }
+        };
       }
       console.error('Stored content does not match WebsiteContent structure', parsedContent);
       return defaultContent;

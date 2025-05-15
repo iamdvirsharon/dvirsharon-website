@@ -8,18 +8,31 @@ import CompaniesSection from "../components/CompaniesSection";
 import IntegrationsSection from "../components/IntegrationsSection";
 import ContactSection from "../components/ContactSection";
 import Footer from "../components/Footer";
+import { useWebsiteContent } from "@/hooks/useWebsiteContent";
 
 const Index = () => {
+  const { content, isLoaded } = useWebsiteContent();
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const { sectionsVisibility } = content;
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <main>
-        <HeroSection />
-        <CompaniesSection />
-        <ServicesSection />
-        <IntegrationsSection />
-        <TestimonialsSection />
-        <ContactSection />
+        {sectionsVisibility?.hero && <HeroSection />}
+        {sectionsVisibility?.companies && <CompaniesSection />}
+        {sectionsVisibility?.services && <ServicesSection />}
+        {sectionsVisibility?.integrations && <IntegrationsSection />}
+        {sectionsVisibility?.testimonials && <TestimonialsSection />}
+        {sectionsVisibility?.contact && <ContactSection />}
       </main>
       <Footer />
     </div>

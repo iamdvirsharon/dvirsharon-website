@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '@/components/AdminLayout';
@@ -9,6 +8,7 @@ import { useWebsiteContent } from '@/hooks/useWebsiteContent';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import ImageUploader from '@/components/admin/ImageUploader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, Search, Database, Zap, Code, Beaker, PlusCircle, X, Trash2 } from 'lucide-react';
@@ -144,6 +144,21 @@ export default function AdminPage() {
     });
   };
 
+  // Helper function to update section visibility
+  const updateSectionVisibility = (section: keyof WebsiteContent['sectionsVisibility'], isVisible: boolean) => {
+    const updatedVisibility = {
+      ...content.sectionsVisibility,
+      [section]: isVisible
+    };
+    
+    updateSection('sectionsVisibility', updatedVisibility);
+    
+    toast({
+      title: isVisible ? "Section enabled" : "Section disabled",
+      description: `${section.charAt(0).toUpperCase() + section.slice(1)} section is now ${isVisible ? 'visible' : 'hidden'}`,
+    });
+  };
+
   if (!isLoggedIn) {
     return <Login onLogin={handleLogin} />;
   }
@@ -181,8 +196,9 @@ export default function AdminPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 md:grid-cols-9 mb-6">
+          <TabsList className="grid grid-cols-4 md:grid-cols-10 mb-6">
             <TabsTrigger value="meta">Meta</TabsTrigger>
+            <TabsTrigger value="visibility">Visibility</TabsTrigger>
             <TabsTrigger value="hero">Hero</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
             <TabsTrigger value="framework">Framework</TabsTrigger>
@@ -220,74 +236,140 @@ export default function AdminPage() {
             </Card>
           </TabsContent>
 
+          {/* Section Visibility Tab */}
+          <TabsContent value="visibility" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Section Visibility</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {Object.entries(content.sectionsVisibility || {}).map(([section, isVisible]) => (
+                  <div key={section} className="flex items-center justify-between border-b pb-4 last:border-0">
+                    <div>
+                      <h3 className="text-lg font-medium capitalize">{section} Section</h3>
+                      <p className="text-sm text-gray-500">
+                        {isVisible ? 'Currently visible' : 'Currently hidden'}
+                      </p>
+                    </div>
+                    <Switch 
+                      checked={isVisible} 
+                      onCheckedChange={(checked) => updateSectionVisibility(section as keyof WebsiteContent['sectionsVisibility'], checked)}
+                    />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Hero Section Tab */}
           <TabsContent value="hero" className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Hero Title</label>
-              <Textarea
-                className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
-                value={content.hero.title}
-                onChange={(e) => {
-                  updateSection('hero', { ...content.hero, title: e.target.value });
-                  // Auto-save feedback
-                  toast({
-                    title: "Change saved",
-                    description: "Updated hero title",
-                  });
-                }}
-              />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Hero Section</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between pb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.hero ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.hero || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('hero', checked)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Hero Title</label>
+                  <Textarea
+                    className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
+                    value={content.hero.title}
+                    onChange={(e) => {
+                      updateSection('hero', { ...content.hero, title: e.target.value });
+                      // Auto-save feedback
+                      toast({
+                        title: "Change saved",
+                        description: "Updated hero title",
+                      });
+                    }}
+                  />
+                </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Hero Subtitle</label>
-              <Textarea
-                className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
-                value={content.hero.subtitle}
-                onChange={(e) => {
-                  updateSection('hero', { ...content.hero, subtitle: e.target.value });
-                  // Auto-save feedback
-                  toast({
-                    title: "Change saved",
-                    description: "Updated hero subtitle",
-                  });
-                }}
-              />
-            </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Hero Subtitle</label>
+                  <Textarea
+                    className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
+                    value={content.hero.subtitle}
+                    onChange={(e) => {
+                      updateSection('hero', { ...content.hero, subtitle: e.target.value });
+                      // Auto-save feedback
+                      toast({
+                        title: "Change saved",
+                        description: "Updated hero subtitle",
+                      });
+                    }}
+                  />
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Button Text</label>
-                <Input
-                  value={content.hero.buttonText}
-                  onChange={(e) => {
-                    updateSection('hero', { ...content.hero, buttonText: e.target.value });
-                    // Auto-save feedback
-                    toast({
-                      title: "Change saved",
-                      description: "Updated button text",
-                    });
-                  }}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Button Link</label>
-                <Input
-                  value={content.hero.buttonLink}
-                  onChange={(e) => {
-                    updateSection('hero', { ...content.hero, buttonLink: e.target.value });
-                    // Auto-save feedback
-                    toast({
-                      title: "Change saved",
-                      description: "Updated button link",
-                    });
-                  }}
-                />
-              </div>
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Button Text</label>
+                    <Input
+                      value={content.hero.buttonText}
+                      onChange={(e) => {
+                        updateSection('hero', { ...content.hero, buttonText: e.target.value });
+                        // Auto-save feedback
+                        toast({
+                          title: "Change saved",
+                          description: "Updated button text",
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Button Link</label>
+                    <Input
+                      value={content.hero.buttonLink}
+                      onChange={(e) => {
+                        updateSection('hero', { ...content.hero, buttonLink: e.target.value });
+                        // Auto-save feedback
+                        toast({
+                          title: "Change saved",
+                          description: "Updated button link",
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Services Section Tab */}
           <TabsContent value="services" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Services Section</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.services ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.services || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('services', checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Services items */}
             <div className="space-y-4">
               {content.services.map((service, index) => (
                 <Card key={index} className="relative">
@@ -356,6 +438,27 @@ export default function AdminPage() {
 
           {/* Framework Steps Tab */}
           <TabsContent value="framework" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Framework Section</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.framework ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.framework || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('framework', checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Framework steps items */}
             <div className="space-y-4">
               {content.frameworkSteps.map((step, index) => (
                 <Card key={index} className="relative">
@@ -416,6 +519,27 @@ export default function AdminPage() {
 
           {/* Integrations Tab */}
           <TabsContent value="integrations" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Integrations Section</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.integrations ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.integrations || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('integrations', checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Integrations items */}
             <div className="space-y-4">
               {content.integrations.map((integration, index) => (
                 <Card key={index} className="relative">
@@ -476,6 +600,27 @@ export default function AdminPage() {
 
           {/* Testimonials Tab */}
           <TabsContent value="testimonials" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Testimonials Section</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.testimonials ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.testimonials || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('testimonials', checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Testimonials items */}
             <div className="space-y-4">
               {content.testimonials.map((testimonial, index) => (
                 <Card key={index} className="relative">
@@ -545,6 +690,27 @@ export default function AdminPage() {
 
           {/* Companies Tab */}
           <TabsContent value="companies" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Companies Section</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.companies ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.companies || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('companies', checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Companies items */}
             <div className="space-y-4">
               {content.companies.map((company, index) => (
                 <Card key={index} className="relative">
@@ -596,6 +762,27 @@ export default function AdminPage() {
 
           {/* FAQs Tab */}
           <TabsContent value="faqs" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>FAQs Section</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.faqs ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.faqs || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('faqs', checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* FAQs items */}
             <div className="space-y-4">
               {content.faqs.map((faq, index) => (
                 <Card key={index} className="relative">
@@ -647,49 +834,69 @@ export default function AdminPage() {
 
           {/* Contact CTA Tab */}
           <TabsContent value="contact" className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">CTA Title</label>
-              <Input
-                value={content.contactCTA.title}
-                onChange={(e) => {
-                  updateSection('contactCTA', { ...content.contactCTA, title: e.target.value });
-                  toast({
-                    title: "Change saved",
-                    description: "Updated CTA title",
-                  });
-                }}
-              />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact CTA Section</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b">
+                  <div>
+                    <h3 className="font-medium">Section Visibility</h3>
+                    <p className="text-sm text-gray-500">
+                      {content.sectionsVisibility?.contact ? 'Currently visible' : 'Currently hidden'}
+                    </p>
+                  </div>
+                  <Switch 
+                    checked={content.sectionsVisibility?.contact || false} 
+                    onCheckedChange={(checked) => updateSectionVisibility('contact', checked)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">CTA Title</label>
+                  <Input
+                    value={content.contactCTA.title}
+                    onChange={(e) => {
+                      updateSection('contactCTA', { ...content.contactCTA, title: e.target.value });
+                      toast({
+                        title: "Change saved",
+                        description: "Updated CTA title",
+                      });
+                    }}
+                  />
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Button Text</label>
-                <Input
-                  value={content.contactCTA.buttonText}
-                  onChange={(e) => {
-                    updateSection('contactCTA', { ...content.contactCTA, buttonText: e.target.value });
-                    toast({
-                      title: "Change saved",
-                      description: "Updated button text",
-                    });
-                  }}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Button Link</label>
-                <Input
-                  value={content.contactCTA.buttonLink}
-                  onChange={(e) => {
-                    updateSection('contactCTA', { ...content.contactCTA, buttonLink: e.target.value });
-                    toast({
-                      title: "Change saved",
-                      description: "Updated button link",
-                    });
-                  }}
-                />
-              </div>
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Button Text</label>
+                    <Input
+                      value={content.contactCTA.buttonText}
+                      onChange={(e) => {
+                        updateSection('contactCTA', { ...content.contactCTA, buttonText: e.target.value });
+                        toast({
+                          title: "Change saved",
+                          description: "Updated button text",
+                        });
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Button Link</label>
+                    <Input
+                      value={content.contactCTA.buttonLink}
+                      onChange={(e) => {
+                        updateSection('contactCTA', { ...content.contactCTA, buttonLink: e.target.value });
+                        toast({
+                          title: "Change saved",
+                          description: "Updated button link",
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
