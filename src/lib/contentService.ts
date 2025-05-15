@@ -1,4 +1,3 @@
-
 import { WebsiteContent } from './contentTypes';
 import { supabase } from '@/integrations/supabase/client';
 import { Json } from '@/integrations/supabase/types';
@@ -223,13 +222,13 @@ export async function fetchWebsiteContent(): Promise<WebsiteContent> {
     const { data, error } = await supabase
       .from(SUPABASE_CONTENT_TABLE)
       .select('content')
-      .single();
+      .limit(1);
     
     if (error) throw error;
     
-    if (data && data.content) {
+    if (data && data.length > 0) {
       // Check and convert the content to WebsiteContent
-      const contentData = data.content;
+      const contentData = data[0].content;
       if (isWebsiteContent(contentData)) {
         // Also update localStorage for offline access
         localStorage.setItem(CONTENT_STORAGE_KEY, JSON.stringify(contentData));
@@ -237,6 +236,14 @@ export async function fetchWebsiteContent(): Promise<WebsiteContent> {
       } else {
         console.error('Retrieved content does not match WebsiteContent structure', contentData);
       }
+    } else {
+      console.log('No data returned from Supabase, using default content and seeding Supabase.');
+      // If no data, seed the database with default content
+      await supabase
+        .from(SUPABASE_CONTENT_TABLE)
+        .insert({ content: websiteContentToJson(defaultContent) });
+
+      return defaultContent;
     }
   } catch (e) {
     console.error('Failed to fetch content from Supabase:', e);
