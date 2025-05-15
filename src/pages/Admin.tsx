@@ -574,7 +574,7 @@ export default function AdminPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Image</label>
+                      <label className="text-sm font-medium">Logo Image</label>
                       <ImageUploader
                         currentImage={integration.imagePath}
                         onImageSelected={(url) => updateArrayItem<IntegrationItem>('integrations', index, 'imagePath', url)}
@@ -769,6 +769,7 @@ export default function AdminPage() {
               <CardContent>
                 <div className="flex items-center justify-between pb-4 mb-4 border-b">
                   <div>
+                    
                     <h3 className="font-medium">Section Visibility</h3>
                     <p className="text-sm text-gray-500">
                       {content.sectionsVisibility?.faqs ? 'Currently visible' : 'Currently hidden'}
