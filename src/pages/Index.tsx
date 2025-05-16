@@ -21,18 +21,18 @@ const Index = () => {
     );
   }
 
-  const { sectionsVisibility } = content;
+  const { sectionsVisibility = {} } = content;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Header />
       <main>
-        {sectionsVisibility?.hero && <HeroSection />}
-        {sectionsVisibility?.companies && <CompaniesSection />}
-        {sectionsVisibility?.services && <ServicesSection />}
-        {sectionsVisibility?.integrations && <IntegrationsSection />}
-        {sectionsVisibility?.testimonials && <TestimonialsSection />}
-        {sectionsVisibility?.contact && <ContactSection />}
+        {sectionsVisibility.hero !== false && <HeroSection />}
+        {sectionsVisibility.companies !== false && <CompaniesSection />}
+        {sectionsVisibility.services !== false && <ServicesSection />}
+        {sectionsVisibility.integrations !== false && <IntegrationsSection />}
+        {sectionsVisibility.testimonials !== false && <TestimonialsSection />}
+        {sectionsVisibility.contact !== false && <ContactSection />}
       </main>
       <Footer />
     </div>

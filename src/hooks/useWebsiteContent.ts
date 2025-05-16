@@ -49,8 +49,10 @@ export function useWebsiteContent() {
     try {
       await saveWebsiteContent(newContent);
       setContent(newContent);
+      return true;
     } catch (error) {
       console.error("Error updating content:", error);
+      return false;
     }
   };
 
@@ -61,8 +63,10 @@ export function useWebsiteContent() {
     try {
       await saveContentSection(section, sectionData);
       setContent(prev => ({ ...prev, [section]: sectionData }));
+      return true;
     } catch (error) {
       console.error(`Error updating section ${String(section)}:`, error);
+      return false;
     }
   };
 
