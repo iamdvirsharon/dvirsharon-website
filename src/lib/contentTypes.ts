@@ -42,6 +42,17 @@ export interface FAQItem {
   answer: string;
 }
 
+export interface SectionsVisibility {
+  hero: boolean;
+  services: boolean;
+  framework: boolean;
+  integrations: boolean;
+  testimonials: boolean;
+  companies: boolean;
+  faqs: boolean;
+  contact: boolean;
+}
+
 export interface WebsiteContent {
   hero: HeroContent;
   services: ServiceItem[];
@@ -57,14 +68,5 @@ export interface WebsiteContent {
     isVisible: boolean;
   };
   // Section visibility controls
-  sectionsVisibility: {
-    hero: boolean;
-    services: boolean;
-    framework: boolean;
-    integrations: boolean;
-    testimonials: boolean;
-    companies: boolean;
-    faqs: boolean;
-    contact: boolean;
-  };
+  sectionsVisibility: SectionsVisibility;
 }

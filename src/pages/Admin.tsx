@@ -6,6 +6,7 @@ import { useWebsiteContent } from '@/hooks/useWebsiteContent'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 import { Separator } from '@/components/ui/separator'
+import { SectionsVisibility } from '@/lib/contentTypes'
 
 export default function Admin() {
   const { content, isLoaded, updateContent } = useWebsiteContent();
@@ -19,11 +20,23 @@ export default function Admin() {
     );
   }
 
-  const handleVisibilityChange = (section: string, value: boolean) => {
+  // Ensure sectionsVisibility exists with default values
+  const sectionsVisibility = content.sectionsVisibility || {
+    hero: true,
+    services: true,
+    framework: true,
+    integrations: true,
+    testimonials: true,
+    companies: true,
+    faqs: true,
+    contact: true
+  };
+
+  const handleVisibilityChange = (section: keyof SectionsVisibility, value: boolean) => {
     const updatedContent = { 
       ...content, 
       sectionsVisibility: { 
-        ...content.sectionsVisibility, 
+        ...sectionsVisibility, 
         [section]: value 
       } 
     };
@@ -65,14 +78,14 @@ export default function Admin() {
           </p>
 
           <div className="space-y-4">
-            {Object.entries(content.sectionsVisibility || {}).map(([key, value]) => (
+            {Object.entries(sectionsVisibility).map(([key, value]) => (
               <div key={key} className="flex items-center justify-between">
                 <div>
                   <span className="font-medium capitalize">{key} Section</span>
                 </div>
                 <Switch 
                   checked={value} 
-                  onCheckedChange={(checked) => handleVisibilityChange(key, checked)} 
+                  onCheckedChange={(checked) => handleVisibilityChange(key as keyof SectionsVisibility, checked)} 
                 />
               </div>
             ))}

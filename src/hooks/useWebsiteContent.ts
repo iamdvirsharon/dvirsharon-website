@@ -20,7 +20,7 @@ export function useWebsiteContent() {
       try {
         const serverContent = await fetchWebsiteContent();
         
-        // Ensure sectionsVisibility exists
+        // Ensure sectionsVisibility exists with default values
         if (!serverContent.sectionsVisibility) {
           serverContent.sectionsVisibility = {
             hero: true,

@@ -21,7 +21,17 @@ const Index = () => {
     );
   }
 
-  const { sectionsVisibility = {} } = content;
+  // Ensure sectionsVisibility exists with default values
+  const sectionsVisibility = content.sectionsVisibility || {
+    hero: true,
+    services: true,
+    framework: true,
+    integrations: true,
+    testimonials: true,
+    companies: true,
+    faqs: true,
+    contact: true
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
