@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,32 +8,85 @@ import { useWebsiteContent } from "@/hooks/useWebsiteContent";
 const TestimonialsSection = () => {
   const { content, isLoaded } = useWebsiteContent();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const intervalRef = useRef<number | null>(null);
   
-  // Auto rotate testimonials
+  // Check if section is visible in viewport
   useEffect(() => {
-    if (!isLoaded || content.testimonials.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      },
+      { threshold: 0.1 }
+    );
     
-    const interval = setInterval(() => {
+    const currentSection = sectionRef.current;
+    if (currentSection) {
+      observer.observe(currentSection);
+    }
+    
+    return () => {
+      if (currentSection) {
+        observer.unobserve(currentSection);
+      }
+    };
+  }, []);
+  
+  // Auto rotate testimonials only when visible
+  useEffect(() => {
+    if (!isLoaded || content.testimonials.length === 0 || !isVisible) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
+    
+    intervalRef.current = window.setInterval(() => {
       setActiveIndex(current => (current + 1) % content.testimonials.length);
     }, 5000); // Change every 5 seconds
 
-    return () => clearInterval(interval);
-  }, [isLoaded, content.testimonials?.length]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isLoaded, content.testimonials?.length, isVisible]);
   
   const goToNext = () => {
     if (!isLoaded || content.testimonials.length === 0) return;
     setActiveIndex(current => (current + 1) % content.testimonials.length);
+    // Reset timer when manually navigating
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = window.setInterval(() => {
+        setActiveIndex(current => (current + 1) % content.testimonials.length);
+      }, 5000);
+    }
   };
   
   const goToPrev = () => {
     if (!isLoaded || content.testimonials.length === 0) return;
     setActiveIndex(current => (current - 1 + content.testimonials.length) % content.testimonials.length);
+    // Reset timer when manually navigating
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = window.setInterval(() => {
+        setActiveIndex(current => (current + 1) % content.testimonials.length);
+      }, 5000);
+    }
   };
   
   if (!isLoaded) return null;
   
   return (
-    <section id="testimonials" className="py-20">
+    <section ref={sectionRef} id="testimonials" className="py-20">
       <div className="container max-w-6xl mx-auto px-4">
         <div className="text-center mb-16 animate-fade-up">
           <h2 className="font-gloock text-5xl md:text-6xl mb-4">Client Success Stories</h2>
@@ -46,7 +99,7 @@ const TestimonialsSection = () => {
           <div className="max-w-3xl mx-auto relative">
             <div className="overflow-hidden">
               <div 
-                className="flex transition-transform duration-700 ease-in-out" 
+                className="flex transition-transform duration-700 ease-in-out will-change-transform" 
                 style={{ transform: `translateX(-${activeIndex * 100}%)` }}
               >
                 {content.testimonials.map((testimonial, index) => (

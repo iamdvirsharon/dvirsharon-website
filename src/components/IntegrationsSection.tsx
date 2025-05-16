@@ -1,13 +1,10 @@
+
 import React from "react";
 import { useWebsiteContent } from "@/hooks/useWebsiteContent";
-import ImageUploader from '@/components/admin/ImageUploader';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const IntegrationsSection = () => {
   const { content, isLoaded, updateSection } = useWebsiteContent();
   
-  if (!isLoaded) return null;
-
   // Default logos with optimized loading
   const defaultLogos = [
     { 
@@ -37,12 +34,12 @@ const IntegrationsSection = () => {
     }
   ];
 
-  // Update logo if not present
-  React.useEffect(() => {
-    if (content.integrations.length === 0) {
-      updateSection('integrations', defaultLogos);
-    }
-  }, []);
+  if (!isLoaded) return null;
+
+  // Update logo if not present - moved outside of useEffect to fix hooks error
+  if (content.integrations.length === 0) {
+    updateSection('integrations', defaultLogos);
+  }
 
   return (
     <section className="py-16 bg-black/30 overflow-hidden">
