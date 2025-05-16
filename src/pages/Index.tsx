@@ -6,6 +6,8 @@ import ServicesSection from "../components/ServicesSection";
 import TestimonialsSection from "../components/TestimonialsSection";
 import CompaniesSection from "../components/CompaniesSection";
 import IntegrationsSection from "../components/IntegrationsSection";
+import FrameworkSection from "../components/FrameworkSection";
+import FAQsSection from "../components/FAQsSection";
 import ContactSection from "../components/ContactSection";
 import Footer from "../components/Footer";
 import { useWebsiteContent } from "@/hooks/useWebsiteContent";
@@ -40,8 +42,10 @@ const Index = () => {
         {sectionsVisibility.hero !== false && <HeroSection />}
         {sectionsVisibility.companies !== false && <CompaniesSection />}
         {sectionsVisibility.services !== false && <ServicesSection />}
+        {sectionsVisibility.framework !== false && <FrameworkSection />}
         {sectionsVisibility.integrations !== false && <IntegrationsSection />}
         {sectionsVisibility.testimonials !== false && <TestimonialsSection />}
+        {sectionsVisibility.faqs !== false && <FAQsSection />}
         {sectionsVisibility.contact !== false && <ContactSection />}
       </main>
       <Footer />
