@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useWebsiteContent } from '@/hooks/useWebsiteContent';
 import {
   Accordion,
@@ -10,16 +10,19 @@ import {
 
 const FAQsSection = () => {
   const { content, isLoaded } = useWebsiteContent();
-  const { faqs } = content;
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Check if section is visible in viewport for performance optimization
+  // Optimize intersection observer for better performance
   useEffect(() => {
+    if (!isLoaded) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           setIsVisible(true);
+          // Disconnect observer once visible to save resources
+          observer.disconnect();
         }
       },
       { threshold: 0.1, rootMargin: "100px" }
@@ -35,7 +38,7 @@ const FAQsSection = () => {
         observer.unobserve(currentSection);
       }
     };
-  }, []);
+  }, [isLoaded]);
 
   if (!isLoaded) return null;
 
@@ -49,10 +52,10 @@ const FAQsSection = () => {
           </p>
         </div>
 
-        {isVisible && (
+        {isVisible ? (
           <div className="max-w-3xl mx-auto">
             <Accordion type="single" collapsible className="w-full">
-              {faqs.map((faq, index) => (
+              {content.faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
                   <AccordionTrigger className="text-lg font-medium">{faq.question}</AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">{faq.answer}</AccordionContent>
@@ -60,6 +63,8 @@ const FAQsSection = () => {
               ))}
             </Accordion>
           </div>
+        ) : (
+          <div className="max-w-3xl mx-auto h-[200px]"></div> // Placeholder while loading
         )}
       </div>
     </section>

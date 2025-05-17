@@ -1,20 +1,23 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useWebsiteContent } from '@/hooks/useWebsiteContent';
 import { motion } from 'framer-motion';
 
 const FrameworkSection = () => {
   const { content, isLoaded } = useWebsiteContent();
-  const { frameworkSteps } = content;
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Check if section is visible in viewport for performance optimization
+  // Optimize intersection observer for better performance
   useEffect(() => {
+    if (!isLoaded) return;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           setIsVisible(true);
+          // Disconnect observer once visible to save resources
+          observer.disconnect();
         }
       },
       { threshold: 0.1, rootMargin: "100px" }
@@ -30,7 +33,7 @@ const FrameworkSection = () => {
         observer.unobserve(currentSection);
       }
     };
-  }, []);
+  }, [isLoaded]);
 
   if (!isLoaded) return null;
 
@@ -44,9 +47,9 @@ const FrameworkSection = () => {
           </p>
         </div>
 
-        {isVisible && (
+        {isVisible ? (
           <div className="grid md:grid-cols-3 gap-8 mt-12">
-            {frameworkSteps.map((step, index) => (
+            {content.frameworkSteps.map((step, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -62,6 +65,8 @@ const FrameworkSection = () => {
               </motion.div>
             ))}
           </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-8 mt-12 h-[250px]"></div> // Placeholder while loading
         )}
       </div>
     </section>

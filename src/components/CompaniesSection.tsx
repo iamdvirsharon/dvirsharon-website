@@ -34,18 +34,23 @@ const CompaniesSection = () => {
   }, []);
 
   useEffect(() => {
-    if (!isLoaded || !isVisible) return;
+    if (!isLoaded || !isVisible) {
+      // Cancel any existing animation when component is not visible
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      return;
+    }
     
     const container = containerRef.current;
     const content = contentRef.current;
     
     if (!container || !content) return;
     
-    // Create a duplicate of the content for seamless scrolling
-    const clone = content.cloneNode(true) as HTMLDivElement;
-    
-    // Only append if it doesn't already exist
+    // Create a duplicate of the content for seamless scrolling if not already present
     if (container.children.length === 1) {
+      const clone = content.cloneNode(true) as HTMLDivElement;
       container.appendChild(clone);
     }
     
@@ -72,6 +77,7 @@ const CompaniesSection = () => {
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
       }
     };
   }, [isLoaded, isVisible]);
@@ -79,11 +85,14 @@ const CompaniesSection = () => {
   if (!isLoaded) return null;
 
   return (
-    <section ref={containerRef} className="py-10 bg-black/40 overflow-hidden">
+    <section className="py-10 bg-black/40 overflow-hidden">
       <div className="container max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-center">
           <div className="overflow-hidden w-full">
-            <div className="inline-flex transition-transform will-change-transform">
+            <div 
+              ref={containerRef}
+              className="inline-flex transition-transform will-change-transform"
+            >
               <div ref={contentRef} className="flex items-center justify-around gap-16 px-8">
                 {content.companies.map((company, index) => (
                   <div 

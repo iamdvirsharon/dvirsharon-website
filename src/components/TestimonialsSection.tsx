@@ -16,10 +16,13 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
+        const isNowVisible = entries[0].isIntersecting;
+        setIsVisible(isNowVisible);
+        
+        // Clear interval when not visible to save resources
+        if (!isNowVisible && intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
         }
       },
       { threshold: 0.1 }
@@ -34,12 +37,16 @@ const TestimonialsSection = () => {
       if (currentSection) {
         observer.unobserve(currentSection);
       }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, []);
   
   // Auto rotate testimonials only when visible
   useEffect(() => {
-    if (!isLoaded || content.testimonials.length === 0 || !isVisible) {
+    if (!isLoaded || !content.testimonials?.length || !isVisible) {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -47,9 +54,12 @@ const TestimonialsSection = () => {
       return;
     }
     
-    intervalRef.current = window.setInterval(() => {
-      setActiveIndex(current => (current + 1) % content.testimonials.length);
-    }, 5000); // Change every 5 seconds
+    // Only set interval if not already set
+    if (!intervalRef.current) {
+      intervalRef.current = window.setInterval(() => {
+        setActiveIndex(current => (current + 1) % content.testimonials.length);
+      }, 5000); // Change every 5 seconds
+    }
 
     return () => {
       if (intervalRef.current) {

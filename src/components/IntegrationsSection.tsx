@@ -1,9 +1,12 @@
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useWebsiteContent } from "@/hooks/useWebsiteContent";
 
 const IntegrationsSection = () => {
   const { content, isLoaded, updateSection } = useWebsiteContent();
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const hasInitialized = useRef(false);
   
   // Default logos with optimized loading
   const defaultLogos = [
@@ -34,15 +37,43 @@ const IntegrationsSection = () => {
     }
   ];
 
+  // Check if section is visible in viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          // Disconnect observer once visible to save resources
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    const currentSection = sectionRef.current;
+    if (currentSection) {
+      observer.observe(currentSection);
+    }
+    
+    return () => {
+      if (currentSection) {
+        observer.unobserve(currentSection);
+      }
+    };
+  }, []);
+
+  // Initialize default logos once when needed
+  useEffect(() => {
+    if (isLoaded && content.integrations.length === 0 && !hasInitialized.current) {
+      updateSection('integrations', defaultLogos);
+      hasInitialized.current = true;
+    }
+  }, [isLoaded, content.integrations.length, updateSection]);
+
   if (!isLoaded) return null;
 
-  // Update logo if not present - moved outside of useEffect to fix hooks error
-  if (content.integrations.length === 0) {
-    updateSection('integrations', defaultLogos);
-  }
-
   return (
-    <section className="py-16 bg-black/30 overflow-hidden">
+    <section ref={sectionRef} className="py-16 bg-black/30 overflow-hidden">
       <div className="container max-w-6xl mx-auto px-4">
         <div className="text-center mb-10 animate-fade-up">
           <h2 className="font-gloock text-5xl md:text-6xl mb-4">
@@ -53,28 +84,30 @@ const IntegrationsSection = () => {
           </p>
         </div>
         
-        <div className="flex items-center justify-center">
-          <div className="overflow-hidden w-full">
-            <div className="flex items-center justify-around gap-8 md:gap-16 px-8 flex-wrap">
-              {content.integrations.map((logo, index) => (
-                <div 
-                  key={index} 
-                  className="flex flex-col items-center gap-4 w-24 md:w-32"
-                >
-                  <img
-                    src={logo.imagePath}
-                    alt={logo.altText}
-                    loading="lazy"
-                    className="w-16 h-16 object-contain transition-opacity hover:opacity-100 opacity-80"
-                    width="64"
-                    height="64"
-                  />
-                  <p className="text-sm text-center text-gray-400">{logo.name}</p>
-                </div>
-              ))}
+        {isVisible && (
+          <div className="flex items-center justify-center">
+            <div className="overflow-hidden w-full">
+              <div className="flex items-center justify-around gap-8 md:gap-16 px-8 flex-wrap">
+                {content.integrations.map((logo, index) => (
+                  <div 
+                    key={index} 
+                    className="flex flex-col items-center gap-4 w-24 md:w-32"
+                  >
+                    <img
+                      src={logo.imagePath}
+                      alt={logo.altText}
+                      loading="lazy"
+                      className="w-16 h-16 object-contain transition-opacity hover:opacity-100 opacity-80"
+                      width="64"
+                      height="64"
+                    />
+                    <p className="text-sm text-center text-gray-400">{logo.name}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
