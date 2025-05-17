@@ -5,6 +5,7 @@ import { useWebsiteContent } from "@/hooks/useWebsiteContent";
 const IntegrationsSection = () => {
   const { content, isLoaded, updateSection } = useWebsiteContent();
   const [isVisible, setIsVisible] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const hasInitialized = useRef(false);
   
@@ -37,12 +38,21 @@ const IntegrationsSection = () => {
     }
   ];
 
+  // Initialize default logos once when needed
+  useEffect(() => {
+    if (isLoaded && content.integrations.length === 0 && !hasInitialized.current) {
+      updateSection('integrations', defaultLogos);
+      hasInitialized.current = true;
+    }
+  }, [isLoaded, content.integrations, updateSection]);
+
   // Check if section is visible in viewport
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          setIsVisible(true);
+          // Add small delay to ensure smooth transition
+          setTimeout(() => setIsVisible(true), 100);
           // Disconnect observer once visible to save resources
           observer.disconnect();
         }
@@ -62,13 +72,15 @@ const IntegrationsSection = () => {
     };
   }, []);
 
-  // Initialize default logos once when needed
+  // Prepare content after visibility is set
   useEffect(() => {
-    if (isLoaded && content.integrations.length === 0 && !hasInitialized.current) {
-      updateSection('integrations', defaultLogos);
-      hasInitialized.current = true;
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        setIsContentReady(true);
+      }, 50);
+      return () => clearTimeout(timer);
     }
-  }, [isLoaded, content.integrations.length, updateSection]);
+  }, [isVisible]);
 
   if (!isLoaded) return null;
 
@@ -85,7 +97,7 @@ const IntegrationsSection = () => {
         </div>
         
         {isVisible && (
-          <div className="flex items-center justify-center">
+          <div className={`flex items-center justify-center transition-opacity duration-500 ${isContentReady ? 'opacity-100' : 'opacity-0'}`}>
             <div className="overflow-hidden w-full">
               <div className="flex items-center justify-around gap-8 md:gap-16 px-8 flex-wrap">
                 {content.integrations.map((logo, index) => (
@@ -107,6 +119,10 @@ const IntegrationsSection = () => {
               </div>
             </div>
           </div>
+        )}
+        
+        {!isVisible && (
+          <div className="h-[150px]"></div> // Placeholder while loading
         )}
       </div>
     </section>

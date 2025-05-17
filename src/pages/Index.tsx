@@ -14,7 +14,7 @@ const FAQsSection = lazy(() => import("../components/FAQsSection"));
 const ContactSection = lazy(() => import("../components/ContactSection"));
 const Footer = lazy(() => import("../components/Footer"));
 
-// Fallback loading component
+// Improved loading fallback with better visual indication
 const LoadingFallback = () => (
   <div className="flex items-center justify-center py-12">
     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -24,18 +24,24 @@ const LoadingFallback = () => (
 const Index = () => {
   const { content, isLoaded } = useWebsiteContent();
   const [isPageLoaded, setIsPageLoaded] = useState(false);
-
-  // Make sure page renders correctly after content is loaded
+  const [isTransitionDone, setIsTransitionDone] = useState(false);
+  
+  // Handle page loading states
   useEffect(() => {
     if (isLoaded) {
-      // Small delay to ensure smooth transition
+      // Small delay for content to be processed
       const timer = setTimeout(() => {
         setIsPageLoaded(true);
+        // Add another transition for better UX
+        setTimeout(() => {
+          setIsTransitionDone(true);
+        }, 500);
       }, 100);
       return () => clearTimeout(timer);
     }
   }, [isLoaded]);
 
+  // Main loading screen
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground">
@@ -58,10 +64,10 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col bg-background text-foreground ${isPageLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}>
+    <div className={`min-h-screen flex flex-col bg-background text-foreground transition-opacity duration-500 ${isPageLoaded ? 'opacity-100' : 'opacity-0'}`}>
       <Header />
       <Suspense fallback={<LoadingFallback />}>
-        <main>
+        <main className={`transition-opacity duration-300 ${isTransitionDone ? 'opacity-100' : 'opacity-90'}`}>
           {sectionsVisibility.hero !== false && <HeroSection />}
           {sectionsVisibility.companies !== false && <CompaniesSection />}
           {sectionsVisibility.services !== false && <ServicesSection />}

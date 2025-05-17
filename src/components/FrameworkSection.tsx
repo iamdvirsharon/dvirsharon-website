@@ -7,6 +7,7 @@ const FrameworkSection = () => {
   const { content, isLoaded } = useWebsiteContent();
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(false);
 
   // Optimize intersection observer for better performance
   useEffect(() => {
@@ -15,7 +16,8 @@ const FrameworkSection = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          setIsVisible(true);
+          // Add small delay to ensure smooth transition
+          setTimeout(() => setIsVisible(true), 100);
           // Disconnect observer once visible to save resources
           observer.disconnect();
         }
@@ -35,6 +37,16 @@ const FrameworkSection = () => {
     };
   }, [isLoaded]);
 
+  // Prepare content after visibility is set
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        setIsContentReady(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible]);
+
   if (!isLoaded) return null;
 
   return (
@@ -47,13 +59,13 @@ const FrameworkSection = () => {
           </p>
         </div>
 
-        {isVisible ? (
-          <div className="grid md:grid-cols-3 gap-8 mt-12">
+        {isVisible && (
+          <div className={`grid md:grid-cols-3 gap-8 mt-12 transition-opacity duration-500 ${isContentReady ? 'opacity-100' : 'opacity-0'}`}>
             {content.frameworkSteps.map((step, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={isContentReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="relative p-6 rounded-lg border border-border bg-card"
               >
@@ -65,7 +77,9 @@ const FrameworkSection = () => {
               </motion.div>
             ))}
           </div>
-        ) : (
+        )}
+
+        {!isVisible && (
           <div className="grid md:grid-cols-3 gap-8 mt-12 h-[250px]"></div> // Placeholder while loading
         )}
       </div>

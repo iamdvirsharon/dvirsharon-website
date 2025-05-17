@@ -9,6 +9,7 @@ const TestimonialsSection = () => {
   const { content, isLoaded } = useWebsiteContent();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const intervalRef = useRef<number | null>(null);
   
@@ -21,7 +22,7 @@ const TestimonialsSection = () => {
         
         // Clear interval when not visible to save resources
         if (!isNowVisible && intervalRef.current) {
-          clearInterval(intervalRef.current);
+          window.clearInterval(intervalRef.current);
           intervalRef.current = null;
         }
       },
@@ -38,19 +39,25 @@ const TestimonialsSection = () => {
         observer.unobserve(currentSection);
       }
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+        window.clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
   }, []);
+
+  // Prepare content after visibility is set
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        setIsContentReady(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible]);
   
   // Auto rotate testimonials only when visible
   useEffect(() => {
-    if (!isLoaded || !content.testimonials?.length || !isVisible) {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+    if (!isLoaded || !content.testimonials?.length || !isVisible || !isContentReady) {
       return;
     }
     
@@ -63,18 +70,18 @@ const TestimonialsSection = () => {
 
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+        window.clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
-  }, [isLoaded, content.testimonials?.length, isVisible]);
+  }, [isLoaded, content.testimonials?.length, isVisible, isContentReady]);
   
   const goToNext = () => {
     if (!isLoaded || content.testimonials.length === 0) return;
     setActiveIndex(current => (current + 1) % content.testimonials.length);
     // Reset timer when manually navigating
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+      window.clearInterval(intervalRef.current);
       intervalRef.current = window.setInterval(() => {
         setActiveIndex(current => (current + 1) % content.testimonials.length);
       }, 5000);
@@ -86,7 +93,7 @@ const TestimonialsSection = () => {
     setActiveIndex(current => (current - 1 + content.testimonials.length) % content.testimonials.length);
     // Reset timer when manually navigating
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+      window.clearInterval(intervalRef.current);
       intervalRef.current = window.setInterval(() => {
         setActiveIndex(current => (current + 1) % content.testimonials.length);
       }, 5000);
@@ -105,8 +112,8 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        {content.testimonials.length > 0 && (
-          <div className="max-w-3xl mx-auto relative">
+        {content.testimonials.length > 0 && isVisible && (
+          <div className={`max-w-3xl mx-auto relative transition-opacity duration-500 ${isContentReady ? 'opacity-100' : 'opacity-0'}`}>
             <div className="overflow-hidden">
               <div 
                 className="flex transition-transform duration-700 ease-in-out will-change-transform" 
@@ -164,6 +171,10 @@ const TestimonialsSection = () => {
               <ChevronRight className="h-6 w-6" />
             </Button>
           </div>
+        )}
+        
+        {(!isVisible || !content.testimonials.length) && (
+          <div className="h-[250px]"></div> // Placeholder while loading
         )}
       </div>
     </section>

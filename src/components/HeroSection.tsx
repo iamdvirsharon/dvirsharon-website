@@ -14,13 +14,13 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
           <div className="animate-fade-up">
             <h1 className="font-gloock text-4xl sm:text-5xl lg:text-6xl leading-tight mb-6">
-              {content.hero.title.split('Start Generating Leads').map((part, index, array) => (
-                index < array.length - 1 ? (
+              {content.hero.title.split('Start Generating Leads').map((part, index, array) => {
+                return index < array.length - 1 ? (
                   <React.Fragment key={index}>
                     {part}<span className="accent-gradient">Start Generating Leads</span>
                   </React.Fragment>
-                ) : part
-              ))}
+                ) : part;
+              })}
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               {content.hero.subtitle}

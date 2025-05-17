@@ -12,6 +12,7 @@ const FAQsSection = () => {
   const { content, isLoaded } = useWebsiteContent();
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(false);
 
   // Optimize intersection observer for better performance
   useEffect(() => {
@@ -20,7 +21,8 @@ const FAQsSection = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          setIsVisible(true);
+          // Add small delay to ensure smooth transition
+          setTimeout(() => setIsVisible(true), 100);
           // Disconnect observer once visible to save resources
           observer.disconnect();
         }
@@ -40,6 +42,16 @@ const FAQsSection = () => {
     };
   }, [isLoaded]);
 
+  // Prepare content after visibility is set
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        setIsContentReady(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible]);
+
   if (!isLoaded) return null;
 
   return (
@@ -53,7 +65,7 @@ const FAQsSection = () => {
         </div>
 
         {isVisible ? (
-          <div className="max-w-3xl mx-auto">
+          <div className={`max-w-3xl mx-auto transition-opacity duration-500 ${isContentReady ? 'opacity-100' : 'opacity-0'}`}>
             <Accordion type="single" collapsible className="w-full">
               {content.faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
