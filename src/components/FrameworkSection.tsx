@@ -60,7 +60,7 @@ const FrameworkSection = () => {
         </div>
 
         {isVisible && (
-          <div className={`grid md:grid-cols-3 gap-8 mt-12 transition-opacity duration-500 ${isContentReady ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`flex flex-wrap justify-center gap-8 mt-12 transition-opacity duration-500 ${isContentReady ? 'opacity-100' : 'opacity-0'}`}>
             {content.frameworkSteps.map((step, index) => (
               <motion.div
                 key={index}
@@ -68,7 +68,7 @@ const FrameworkSection = () => {
                 animate={isContentReady ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="relative p-6 rounded-lg border border-border bg-card"
-              >
+ style={{ flex: '1 1 250px', maxWidth: '300px' }} >
                 <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
                   {step.number}
                 </div>

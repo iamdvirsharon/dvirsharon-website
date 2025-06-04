@@ -48,7 +48,7 @@ const Navbar1 = () => {
 
         {/* Desktop CTA Button */}
         <div className="hidden md:block">
-          <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-5 py-2 text-sm text-white bg-black rounded-full hover:bg-gray-800 transition-colors">
+          <a href="https://zcal.co/dvirsharon/30min" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-5 py-2 text-sm text-white bg-black rounded-full hover:bg-gray-800 transition-colors border border-white">
             Let's Talk
           </a>
         </div>
