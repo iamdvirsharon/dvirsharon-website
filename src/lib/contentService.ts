@@ -183,8 +183,8 @@ const defaultContent: WebsiteContent = {
     framework: true,
     integrations: true,
     testimonials: true,
-    companies: true,
-    faqs: true,
+    companies: true, // Default section visibility
+    faqs: false, // Default section visibility
     contact: true
   }
 };
